@@ -1,26 +1,73 @@
-# AI 赛事雷达
+# 🏆 竞赛雷达 · AI Contest Radar
 
-聚合全网 AI 竞赛 / 黑客松 / 创作赛的静态网页工具。
+> 聚合全网高含金量大学生竞赛信息，每日自动更新，支持本校竞赛查询和开源数据贡献。
 
-**在线访问**：<https://ye4wzp.github.io/ai-contest-radar/>（GitHub Actions 每天北京时间 08:30 自动更新数据）
+---
 
-## 数据管线
+## ✨ 功能特性
 
-```bash
-cd scripts
-python3 fetch_competehub.py 50   # AI赛事通       -> data/sources/competehub.json
-python3 fetch_tencent.py         # 腾讯云黑客松官网 -> data/sources/tencent.json
-python3 fetch_mlh.py             # MLH 国际黑客松  -> data/sources/mlh.json
-cd .. && python3 scripts/build_data.py
-# 累积合并全部源 + manual.json 并去重 -> data/data.js；结束超 14 天的赛事移入 data/archive.json
-```
+- 🔄 **每日自动更新**：爬虫脚本每天定时抓取最新竞赛信息
+- 🏅 **官方白名单筛选**：基于教育部84项竞赛目录，只收录高含金量赛事
+- 🔍 **本校竞赛查询**：输入学校名称，查看该校认可的竞赛名单（社区共建）
+- 📊 **多维度筛选**：按赛道、地区、奖金、截止日期等筛选
+- 🌐 **开源社区驱动**：任何人都可以贡献数据和代码
 
-- `data/manual.json`：手工维护的官方重点赛事（`featured: true`），条目 schema 与抓取结果一致。
-- 状态（报名中/进行中/已结束等）由前端按日期实时计算，无需重新构建。
-- 收藏：页面上点 ☆ 收藏比赛（存 localStorage），工具栏「★ 只看收藏」过滤。
+---
 
-## 飞书提醒
+## 🚀 快速开始
 
-仓库 Settings → Secrets and variables → Actions 添加 `FEISHU_WEBHOOK`
-（飞书群 → 设置 → 群机器人 → 添加「自定义机器人」，复制 webhook 地址）。
-配置后每天自动推送：7 / 3 / 1 / 0 天截止的比赛清单，以及抓取失败告警。未配置则跳过。
+访问在线工作台：`https://ai-contest-radar.pages.dev`
+
+无需安装，直接打开即可浏览所有竞赛信息。
+
+---
+
+## 📂 数据贡献指南
+
+欢迎参与完善竞赛数据！
+
+### 如何添加新的竞赛
+
+1. Fork 本仓库
+2. 编辑 `data/manual.json` 文件，按以下格式添加：
+   ```json
+   {
+     "name": "竞赛名称",
+     "url": "官网链接",
+     "start_date": "2026-01-01",
+     "end_date": "2026-06-30",
+     "location": "举办地点",
+     "description": "简要描述",
+     "tags": ["标签1", "标签2"],
+     "featured": true
+   }
+   ```
+3. 提交 Pull Request
+
+### 如何添加本校认可竞赛名单
+
+1. 在 `data/schools/` 目录下创建 `学校名称.json` 文件
+2. 格式示例：
+   ```json
+   {
+     "school": "中南财经政法大学",
+     "recognized_competitions": [
+       "中国国际大学生创新大赛",
+       "挑战杯全国大学生课外学术科技作品竞赛"
+     ]
+   }
+   ```
+3. 提交 Pull Request
+
+---
+
+## 📄 开源许可证
+
+本项目采用 MIT License 开源，详情见 [LICENSE](LICENSE) 文件。
+
+---
+
+## 🙏 致谢
+
+- 数据来源：中国高等教育学会《全国普通高校大学生竞赛分析报告》
+- 项目灵感：为大学生提供可靠的竞赛信息聚合平台
