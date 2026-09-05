@@ -36,7 +36,7 @@
         <option value="name">按名称</option>
       </select>
       <div class="view-toggle" id="view-toggle">
-        <button data-view="list" class="active">列表</button>
+        <button data-view="list" class="active">列表</button>        列表</
         <button data-view="calendar">日历</button>
       </div>
     </div>
@@ -50,12 +50,18 @@
   </section>
 
   <section id="list-view">
+    <div class="filter-bar">
+      <button class="chip active" id="filter-all">📋 全部</button>
+      <button class="chip" id="filter-whitelist" style="border-color: #FF6B35;">🏅 官方白名单</button>
+    </div>
     <h2 class="section-title"><span class="tick"></span>全部赛事 <span class="count" id="list-count"></span></h2>
     <div class="card-grid" id="card-grid"></div>
-    <p class="empty" id="empty" hidden>没有符合条件的比赛 —— 换个筛选条件试试。</p>
+    <p class="empty" id="empty" hidden>没有符合条件的比赛 —— 换个筛选条件试试。</p>    
+没有符合条件的比赛 —— 换个筛选条件试试。</
   </section>
 
-  <section id="calendar-view" hidden>
+  <section id="calendar-view" hidden>  
+
     <div class="cal-header">
       <button id="cal-prev" class="cal-nav">‹</button>
       <h2 class="cal-title" id="cal-title"></h2>
@@ -67,7 +73,7 @@
 </main>
 
 <footer class="footer">
-  <p>数据来源：各赛事官方页面 · <a href="https://www.competehub.dev/zh" target="_blank" rel="noopener">AI赛事通</a> 等公开渠道，仅作信息聚合，报名请以官方页面为准。</p>
+  <p>数据来源：各赛事官方页面 · <a href=" " target="_blank" rel="noopener">AI赛事通</a> 等公开渠道，仅作信息聚合，报名请以官方页面为准。</p>
   <p id="updated-line"></p>
 </footer>
 
@@ -80,5 +86,36 @@
 
 <script src="data/data.js"></script>
 <script src="assets/app.js"></script>
+<script><脚本>
+// 白名单筛选功能
+document.addEventListener('DOMContentLoaded', function() {
+    const filterAll = document.getElementById('filter-all');
+    const filterWhitelist = document.getElementById('filter-whitelist');
+
+    function filterContests(type) {    函数 filterContests(类型) {
+        const cards = document.querySelectorAll('#card-grid .contest-card, #featured-grid .contest-card');
+        cards.forEach(card => {
+            if (type === 'all') {
+                card.style.display = '';
+            } else if (type === 'whitelist') {
+                const isWhitelist = card.querySelector('.badge') !== null;
+                card.style.display = isWhitelist ? '' : 'none';
+            }
+        });
+    }
+
+    filterAll.addEventListener('click', function() {
+        this.classList.add('active');
+        filterWhitelist.classList.remove('active');
+        filterContests('all');
+    });
+
+    filterWhitelist.addEventListener('click', function() {
+        this.classList.add('active');
+        filterAll.classList.remove('active');
+        filterContests('whitelist');
+    });
+});
+</script>
 </body>
 </html>
