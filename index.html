@@ -18,7 +18,7 @@
     <div class="stats" id="stats"></div>
   </div>
   <div class="masthead-rule thin"></div>
-</header>
+</header></头部>
 
 <nav class="toolbar" id="toolbar">
   <div class="toolbar-inner">
@@ -28,7 +28,7 @@
     <div class="chip-group" id="region-chips" data-filter="region"></div>
     <button id="active-tag" class="chip active" hidden></button>
     <div class="toolbar-right">
-      <button id="fav-toggle" class="chip fav-filter">★ 只看收藏</button>
+      <button id="fav-toggle" class="chip fav-filter">★ 只看收藏</button><按钮 id="fav-toggle" 类="芯片 fav-filter">★ 仅显示收藏</按钮>
       <select id="sort" class="select">
         <option value="deadline">按截止时间</option>
         <option value="prize">按奖金</option>
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const filterAll = document.getElementById('filter-all');
     const filterWhitelist = document.getElementById('filter-whitelist');
 
-    function filterContests(type) {    函数 filterContests(类型) {
+    function filterContests(type) {    函数 filterContests(类型) {    函数 filterContests(type) {    函数 filterContests(类型) {
         const cards = document.querySelectorAll('#card-grid .contest-card, #featured-grid .contest-card');
         cards.forEach(card => {
             if (type === 'all') {
