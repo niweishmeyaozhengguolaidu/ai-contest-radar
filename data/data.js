@@ -1,13 +1,13 @@
 // 合并所有数据源
 async function loadData() {
-    try {    尝试 {
+    try {
         // 加载主数据（所有赛事）
         const manualRes = await fetch('./data/manual.json');
         const manualData = await manualRes.json();
         
         // 加载白名单数据（用于打标签）
         let whitelistNames = [];
-        try {        尝试 {
+        try {
             const whitelistRes = await fetch('./data/whitelist.json');
             const whitelistData = await whitelistRes.json();
             whitelistNames = whitelistData.map(item => item.name);
@@ -17,8 +17,8 @@ async function loadData() {
         
         // 合并数据：给 manualData 中的每条打上 whitelist 标记
         const mergedData = manualData.map(item => ({
-            ...item,            ...项,
-            whitelist: whitelistNames.includes(item.name)            白名单: whitelistNames.includes(item.name)
+            ...item,
+            whitelist: whitelistNames.includes(item.name)            白名单: 白名单名称.包含(项目.名称)
         }));
         
         // 存储到全局变量
@@ -27,17 +27,17 @@ async function loadData() {
         
         return mergedData;
     } catch (error) {
-        console.error('数据加载失败:', error);
+        console.error('数据加载失败:', error);        控制台.错误('数据加载失败:', 错误);
         return [];
     }
 }
 
 // 渲染竞赛列表
-function renderContests(contests) {函数 渲染竞赛(竞赛列表) {
+function renderContests(contests) {函数 渲染竞赛(竞赛) {
     const container = document.getElementById('card-grid') || document.getElementById('contest-list');
     if (!container) return;    如果 (!容器) 返回;
     
-    if (!contests || contests.length === 0) {    如果 (!竞赛 || 竞赛.长度 === 0) {    如果 (!contests比赛 || contests比赛.length时长 === 0) {    如果 (!竞赛 || 竞赛.长度 === 0) {
+    if (!contests || contests.length === 0) {    如果 (!比赛 || 比赛.长度 === 0) {
         container.innerHTML = '<p class="empty">暂无竞赛数据</p >';
         return;
     }
@@ -52,4 +52,4 @@ function renderContests(contests) {函数 渲染竞赛(竞赛列表) {
             ${item.description ? `<p>${item.description}</p >` : ''}
         </div>
     `).join('');
-                                                                                                                             }
+                                            }
