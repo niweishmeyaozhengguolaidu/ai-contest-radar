@@ -44,8 +44,8 @@
 </nav>
 
 <main class="content">
-  <!-- 学校竞赛查询 - 风格已统一为原项目样式 -->
-  <section style="max-width: 900px; margin: 0 auto 20px auto; padding: 0 16px;">
+  <!-- 学校竞赛查询 -->
+  <section id="school-query" style="max-width: 900px; margin: 0 auto 20px auto; padding: 0 16px;">
     <div style="background: var(--bg-secondary, #f5f7fa); padding: 16px 20px; border-radius: 8px; border: 1px solid var(--border-color, #e0e0e0);">
       <h3 style="margin: 0 0 10px 0; font-size: 16px; color: var(--text-primary, #333);">🔍 查询本校认可竞赛</h3>
       <div style="display: flex; gap: 10px; flex-wrap: wrap;">
@@ -62,9 +62,14 @@
   </section>
 
   <section id="list-view">
+    <!-- 筛选按钮 -->
+    <div class="filter-bar" style="display: flex; gap: 10px; margin: 15px 0; flex-wrap: wrap;">
+      <button class="chip active" id="filter-all">📋 全部</button>
+      <button class="chip" id="filter-whitelist" style="border-color: #FF6B35;">🏅 官方白名单</button>
+    </div>
     <h2 class="section-title"><span class="tick"></span>全部赛事 <span class="count" id="list-count"></span></h2>
     <div class="card-grid" id="card-grid"></div>
-    <p class="empty" id="empty" hidden>没有符合条件的比赛 —— 换个筛选条件试试。</p>
+    <p class="empty" id="empty" hidden>没有符合条件的比赛 —— 换个筛选条件试试。</p >
   </section>
 
   <section id="calendar-view" hidden>
@@ -79,8 +84,8 @@
 </main>
 
 <footer class="footer">
-  <p>数据来源：各赛事官方页面 · <a href=" " target="_blank" rel="noopener">AI赛事通</a> 等公开渠道，仅作信息聚合，报名请以官方页面为准。</p>
-  <p id="updated-line"></p>
+  <p>数据来源：各赛事官方页面 · <a href=" " target="_blank" rel="noopener">AI赛事通</a > 等公开渠道，仅作信息聚合，报名请以官方页面为准。</p >
+  <p id="updated-line"></p >
 </footer>
 
 <div class="modal-backdrop" id="modal" hidden>
@@ -93,7 +98,39 @@
 <script src="data/data.js"></script>
 <script src="assets/app.js"></script>
 <script>
-// 学校竞赛查询功能（风格统一版）
+// 白名单筛选功能
+document.addEventListener('DOMContentLoaded', function() {
+    var filterAll = document.getElementById('filter-all');
+    var filterWhitelist = document.getElementById('filter-whitelist');
+
+    if (filterAll && filterWhitelist) {
+        function filterContests(type) {
+            var cards = document.querySelectorAll('#card-grid .contest-card, #featured-grid .contest-card');
+            cards.forEach(function(card) {
+                if (type === 'all') {
+                    card.style.display = '';
+                } else if (type === 'whitelist') {
+                    var isWhitelist = card.querySelector('.badge') !== null;
+                    card.style.display = isWhitelist ? '' : 'none';
+                }
+            });
+        }
+
+        filterAll.addEventListener('click', function() {
+            this.classList.add('active');
+            filterWhitelist.classList.remove('active');
+            filterContests('all');
+        });
+
+        filterWhitelist.addEventListener('click', function() {
+            this.classList.add('active');
+            filterAll.classList.remove('active');
+            filterContests('whitelist');
+        });
+    }
+});
+
+// 学校竞赛查询功能
 function querySchool() {
     var input = document.getElementById('schoolInput');
     var result = document.getElementById('schoolResult');
@@ -101,11 +138,11 @@ function querySchool() {
     
     var schoolName = input.value.trim();
     if (!schoolName) {
-        result.innerHTML = '<p style="color: #999; margin: 0;">请输入学校名称</p>';
+        result.innerHTML = '<p style="color: #999; margin: 0;">请输入学校名称</p >';
         return;
     }
 
-    result.innerHTML = '<p style="color: #666; margin: 0;">⏳ 查询中...</p>';
+    result.innerHTML = '<p style="color: #666; margin: 0;">⏳ 查询中...</p >';
 
     fetch('./data/schools/' + encodeURIComponent(schoolName) + '.json')
         .then(function(res) {
@@ -114,34 +151,106 @@ function querySchool() {
         })
         .then(function(data) {
             if (data.recognized_competitions && data.recognized_competitions.length > 0) {
-                var listHtml = '';
-                data.recognized_competitions.forEach(function(name) {
-                    listHtml += '<li style="padding: 4px 0;">' + name + '</li>';
-                });
-                result.innerHTML = '<div style="background: #e8f5e9; padding: 14px 18px; border-radius: 8px; border-left: 4px solid #2e7d32;">' +
-                    '<strong style="color: #2e7d32;">✅ ' + data.school + ' 认可的竞赛：</strong>' +
-                    '<ul style="margin: 8px 0 0 0; padding-left: 20px;">' + listHtml + '</ul>' +
-                    '</div>';
+                return fetch('./data/manual.json')
+                    .then(function(res) { return res.json(); })
+                    .then(function(allContests) {
+                        var contestMap = {};
+                        allContests.forEach(function(c) {
+                            contestMap[c.name] = c;
+                        });
+
+                        var listHtml = '';
+                        data.recognized_competitions.forEach(function(name) {
+                            var contest = contestMap[name];
+                            if (contest) {
+                                listHtml += '<div style="background: #f8f9fa; padding: 12px 16px; margin-bottom: 8px; border-radius: 6px; border-left: 3px solid #4A6CF7; cursor: pointer;" onclick="showContestDetail(\'' + encodeURIComponent(contest.name) + '\')">' +
+                                    '<strong style="font-size: 15px;">' + contest.name + '</strong>' +
+                                    (contest.url ? '<br><a href="' + contest.url + '" target="_blank" style="color: #4A6CF7; font-size: 13px;" onclick="event.stopPropagation();">🔗 查看官网</a >' : '') +
+                                    (contest.start_date ? '<br><span style="font-size: 13px; color: #666;">📅 开始：' + contest.start_date + '</span>' : '') +
+                                    (contest.end_date ? '<span style="font-size: 13px; color: #666; margin-left: 12px;">截止：' + contest.end_date + '</span>' : '') +
+                                    (contest.description ? '<br><span style="font-size: 13px; color: #555;">' + contest.description + '</span>' : '') +
+                                    '</div>';
+                            } else {
+                                listHtml += '<div style="background: #f8f9fa; padding: 12px 16px; margin-bottom: 8px; border-radius: 6px; border-left: 3px solid #ccc;">' +
+                                    '<strong style="font-size: 15px;">' + name + '</strong>' +
+                                    '<br><span style="font-size: 13px; color: #999;">📌 暂无详细数据</span>' +
+                                    '</div>';
+                            }
+                        });
+
+                        result.innerHTML = '<div style="background: #e8f5e9; padding: 14px 18px; border-radius: 8px; border-left: 4px solid #2e7d32;">' +
+                            '<strong style="color: #2e7d32;">✅ ' + data.school + ' 认可的竞赛：</strong>' +
+                            '<div style="margin-top: 10px;">' + listHtml + '</div>' +
+                            '</div>';
+                    });
             } else {
-                result.innerHTML = '<p style="color: #f39c12; margin: 0;">该学校暂无认可的竞赛数据</p>';
+                result.innerHTML = '<p style="color: #f39c12; margin: 0;">该学校暂无认可的竞赛数据</p >';
             }
         })
         .catch(function() {
-            result.innerHTML = '<p style="color: #e74c3c; margin: 0;">❌ 未找到 "' + schoolName + '" 的数据，欢迎在 GitHub 上贡献！</p>';
+            result.innerHTML = '<p style="color: #e74c3c; margin: 0;">❌ 未找到 "' + schoolName + '" 的数据，欢迎在 GitHub 上贡献！</p >';
         });
 }
 
-// 回车键触发查询
-document.addEventListener('DOMContentLoaded', function() {
+// 显示竞赛详情弹窗
+function showContestDetail(encodedName) {
+    var name = decodeURIComponent(encodedName);
+    fetch('./data/manual.json')
+        .then(function(res) { return res.json(); })
+        .then(function(allContests) {
+            var contest = allContests.find(function(c) { return c.name === name; });
+            if (!contest) {
+                alert('未找到该赛事的详细数据');
+                return;
+            }
+            var detailHtml = 
+                '<h3 style="margin: 0 0 10px 0;">' + contest.name + '</h3>' +
+                (contest.url ? '<p>🔗 <a href="' + contest.url + '" target="_blank">官网链接</a ></p >' : '') +
+                (contest.start_date ? '<p>📅 开始时间：' + contest.start_date + '</p >' : '') +
+                (contest.end_date ? '<p>⏰ 截止时间：' + contest.end_date + '</p >' : '') +
+                (contest.location ? '<p>📍 地点：' + contest.location + '</p >' : '') +
+                (contest.description ? '<p>📝 描述：' + contest.description + '</p >' : '') +
+                (contest.tags ? '<p>🏷️ 标签：' + contest.tags.join('、') + '</p >' : '');
+            
+            var modal = document.getElementById('modal');
+            var modalBody = document.getElementById('modal-body');
+            if (modal && modalBody) {
+                modalBody.innerHTML = detailHtml;
+                modal.removeAttribute('hidden');
+            } else {
+                alert(detailHtml.replace(/<[^>]*>/g, ''));
+            }
+        })
+        .catch(function() {
+            alert('加载赛事详情失败，请稍后重试');
+        });
+}
+
+// 关闭弹窗
+document.addEventListener('DOMContentLoaded', function() {文档.addEventListener('DOMContentLoaded', 函数() {
+    var closeBtn = document.getElementById('modal-close');
+    var modal = document.getElementById('modal');
+    if (closeBtn && modal) {
+        closeBtn.addEventListener('click', function() {
+            modal.setAttribute('hidden', '');
+        });
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.setAttribute('hidden', '');
+            }
+        });
+    }
+
+    // 回车键触发查询
     var input = document.getElementById('schoolInput');
     if (input) {
-        input.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                querySchool();
+        input.addEventListener('keypress', function(e) {        输入.addEventListener('按键按下', 函数(e) {
+            if (e.key === 'Enter') {            如果 (e.键 === '回车') {
+                querySchool();                查询学校();
             }
         });
     }
 });
-</script>
+</script></脚本>
 </body>
 </html>
