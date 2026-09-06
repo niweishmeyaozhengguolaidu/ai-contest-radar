@@ -36,4 +36,10 @@ function renderContests(contests) {
         return '<div class="contest-card' + (item.whitelist ? ' whitelist' : '') + '">' +
             (item.whitelist ? '<span class="badge">🏅 官方白名单</span>' : '') +
             '<h3>' + (item.name || '未命名竞赛') + '</h3>' +
-            (item.url ? '<
+            (item.url ? '<a href="' + item.url + '" target="_blank">查看官网</a>' : '') +
+            (item.start_date ? '<p>开始时间：' + item.start_date + '</p>' : '') +
+            (item.end_date ? '<p>结束时间：' + item.end_date + '</p>' : '') +
+            (item.description ? '<p>' + item.description + '</p>' : '') +
+            '</div>';
+    }).join('');
+}
