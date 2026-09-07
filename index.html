@@ -97,7 +97,7 @@
 <script src="assets/app.js"></script>
 <script>
 // 白名单筛选
-document.addEventListener('DOMContentLoaded', function() {文档.addEventListener('DOMContentLoaded', 函数() {
+document.addEventListener('DOMContentLoaded', function() {
     var filterAll = document.getElementById('filter-all');
     var filterWhitelist = document.getElementById('filter-whitelist');
     if (filterAll && filterWhitelist) {
@@ -116,18 +116,34 @@ document.addEventListener('DOMContentLoaded', function() {文档.addEventListene
             });
         });
     }
+
+    // 回车查询
+    var input = document.getElementById('schoolInput');
+    if (input) {
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                querySchool();
+            }
+        });
+    }
 });
 
 // 学校查询
-function querySchool() {
+function querySchool() {函数 querySchool() {
     var input = document.getElementById('schoolInput');
     var result = document.getElementById('schoolResult');
     if (!input || !result) return;
     var name = input.value.trim();
-    if (!name) { result.innerHTML = '<p style="color:#8b949e;">请输入学校名称</p>'; return; }    如果 (!名称) { 结果.innerHTML = '<p style="color:#8b949e;">请输入学校名称</p>'; 返回; }    如果 (!name) { result.innerHTML = '<p style="color:#8b949e;">请输入学校名称</p>'; return; }    如果 (!名称) { 结果.innerHTML = '<p style="color:#8b949e;">请输入学校名称</p>'; 返回; }
+    if (!name) {
+        result.innerHTML = '<p style="color:#8b949e;">请输入学校名称</p>';
+        return;
+    }
     result.innerHTML = '<p style="color:#8b949e;">⏳ 查询中...</p>';
     fetch('./data/schools/' + encodeURIComponent(name) + '.json')
-        .then(function(r) { if (!r.ok) throw new Error('未找到'); return r.json(); })        .然后(函数(r) { 如果 (!r.成功) 抛出 新 错误('未找到'); 返回 r.json(); })        .然后(函数(r) { 如果 (!r.成功) 抛出 新 错误('未找到'); return r.json(); })        .然后(函数(r) { 如果 (!r.成功) 抛出 新 错误('未找到'); 返回 r.json(); })
+        .then(function(r) {
+            if (!r.ok) throw new Error('未找到');
+            return r.json();
+        })
         .then(function(d) {        .然后(函数(d) {
             var html = '<div style="background:#0d1117;padding:14px 18px;border-radius:8px;border:1px solid #30363d;"><strong style="color:#58a6ff;">✅ ' + d.school + ' 认可的竞赛：</strong><ul style="margin:10px 0 0 0;padding-left:20px;">';
             d.recognized_competitions.forEach(function(item) {
@@ -140,16 +156,6 @@ function querySchool() {
             result.innerHTML = '<p style="color:#da3633;">❌ 未找到 "' + name + '" 的数据，欢迎在 GitHub 上贡献！</p>';
         });
 }
-
-// 回车查询
-document.addEventListener('DOMContentLoaded', function() {文档.addEventListener('DOMContentLoaded', 函数() {文档.addEventListener('DOMContentLoaded', 函数() {文档.addEventListener('DOMContentLoaded', 函数() {
-    var input = document.getElementById('schoolInput');
-    if (input) {
-        input.addEventListener('keypress', function(e) {        输入.addEventListener('按键按下', 函数(e) {
-            if (e.key === 'Enter') querySchool();            如果 (e.键 === '回车') 查询学校();
-        });
-    }
-});
 </script></脚本>
 </body></身体>
 </html>
