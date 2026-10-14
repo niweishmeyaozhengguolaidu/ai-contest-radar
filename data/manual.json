@@ -1,6 +1,26 @@
 [
-  {"name":"中国国际大学生创新大赛","url":"https://cy.ncss.cn/"},
-  {"name":"挑战杯全国大学生课外学术科技作品竞赛","url":"http://www.tiaozhanbei.net/"},
-  {"name":"挑战杯中国大学生创业计划大赛","url":"http://www.chuangqingchun.net/"},
-  {"name":"ACM-ICPC国际大学生程序设计竞赛","url":"https://icpc.global/"}
+  {
+    "name": "【加分】全国大学生广告艺术大赛",
+    "url": "https://www.baidu.com/s?wd=全国大学生广告艺术大赛"
+  },
+  {
+    "name": "【加分】“学创杯”全国大学生创业综合模拟大赛",
+    "url": "https://www.baidu.com/s?wd=学创杯全国大学生创业综合模拟大赛"
+  },
+  {
+    "name": "【加分】“网中杯”大学生财务决策大赛",
+    "url": "https://www.baidu.com/s?wd=网中杯大学生财务决策大赛"
+  },
+  {
+    "name": "【加分】全国高等院校数智化企业经营沙盘大赛",
+    "url": "https://www.baidu.com/s?wd=全国高等院校数智化企业经营沙盘大赛"
+  },
+  {
+    "name": "【加分】全国大学生职业规划大赛",
+    "url": "https://www.baidu.com/s?wd=全国大学生职业规划大赛"
+  },
+  {
+    "name": "【加分】“高教社杯”大学生“用外语讲好中国故事”",
+    "url": "https://www.baidu.com/s?wd=高教社杯用外语讲好中国故事"
+  }
 ]
